@@ -1,0 +1,26 @@
+import java.util.Scanner;
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Input a string:");
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        System.out.println(palindromeCheck(input));
+    }
+    public static boolean palindromeCheck(String str){
+        if (str == null) {
+            return false;
+        }
+        String cleanedStr = str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        int left = 0;
+        int right = cleanedStr.length() - 1;
+
+        while (left < right) {
+            if (cleanedStr.charAt(left) != cleanedStr.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}
