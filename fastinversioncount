@@ -1,0 +1,91 @@
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int size = getArraySize(scanner);
+        double[] arr = readArray(scanner, size);
+        double[] originalArr = arr.clone();
+        int inversionCount = countInversions(arr);
+        displayResult(inversionCount);
+        System.out.print("Original array: ");
+        printArray(originalArr);
+        System.out.print("Sorted array:   ");
+        printArray(arr);
+    }
+
+    public static int getArraySize(Scanner scanner) {
+        System.out.println("Enter array size: ");
+        int size = scanner.nextInt();
+        while (size <= 0) {
+            System.out.println("Input a number (>0): ");
+            size = scanner.nextInt();
+        }
+        return size;
+    }
+
+    public static double[] readArray(Scanner scanner, int size) {
+        double[] arr = new double[size];
+        System.out.println("Enter " + size + " numbers:");
+        for (int i = 0; i < size; i++) {
+            System.out.println("Element " + (i + 1) + ": ");
+            arr[i] = scanner.nextDouble();
+        }
+        return arr;
+    }
+
+    public static int countInversions(double[] arr) {
+        double[] temp = new double[arr.length];
+        return mergeSortAndCount(arr, temp, 0, arr.length - 1);
+    }
+
+    public static int mergeSortAndCount(double[] arr, double[] temp, int left, int right) {
+        int invCount = 0;
+        if (left < right) {
+            int mid = left + (right - left) / 2;
+            invCount += mergeSortAndCount(arr, temp, left, mid);
+            invCount += mergeSortAndCount(arr, temp, mid + 1, right);
+            invCount += mergeAndCount(arr, temp, left, mid, right);
+        }
+        return invCount;
+    }
+
+    public static int mergeAndCount(double[] arr, double[] temp, int left, int mid, int right) {
+        int l1 = left;
+        int m = mid + 1;
+        int l2 = left;
+        int invCount = 0;
+        while (l1 <= mid && m <= right) {
+            if (arr[l1] <= arr[m]) {
+                temp[l2++] = arr[l1++];
+            } else {
+                temp[l2++] = arr[m++];
+                invCount += (mid - l1 + 1);
+            }
+        }
+        while (l1 <= mid) {
+            temp[l2++] = arr[l1++];
+        }
+        while (m <= right) {
+            temp[l2++] = arr[m++];
+        }
+        for (l1 = left; l1 <= right; l1++) {
+            arr[l1] = temp[l1];
+        }
+        return invCount;
+    }
+
+    public static void displayResult(int count) {
+        System.out.println("Number of inversions: " + count);
+    }
+
+    public static void printArray(double[] arr) {
+        System.out.print("[");
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i]);
+            if (i < arr.length - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println("]");
+    }
+}
